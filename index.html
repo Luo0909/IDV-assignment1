@@ -48,13 +48,13 @@ async function fetchPSIData() {
     const response = await fetch('https://api.data.gov.sg/v1/environment/psi');
     const data = await response.json();
 
-    // 时间
+    
     const timestamp = data.items[0].update_timestamp || data.items[0].timestamp;
     document.getElementById("timestring").textContent = `Timestamp: ${timestamp}`;
 
     const readings = data.items[0].readings;
 
-    // 遍历所有 readings
+     readings
     for (const metric in readings) {
       const row = document.createElement("tr");
 
