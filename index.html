@@ -1,1 +1,85 @@
-Project Proposal: Ningbo Urban Sustainable Development Story Narrative Flow We will narrate the evolution of quality of life in Ningbo from 2010 to 2025 through three key sustainability indicators: Air Quality: How rapid industrialization initially worsened pollution, and how subsequent policies led to improvement. Traffic Congestion: How the increase in car ownership strained the city, and the extent to which public transit alleviated this issue. Green Coverage: How urban planning gradually expanded parks and green belts to enhance livability. The story will unfold chronologically, divided into three phases: 2010–2015: Period of rapid growth, marked by significant pollution and rising congestion. 2016–2020: Policy intervention phase, a transition period. 2021–2025: Gradual improvement phase, with increased greenery and better air quality. Each phase will be introduced with concise text, supported by interactive visuals that illustrate the corresponding data. Interactive Visuals The visualization will combine an interactive map with dynamic charts: Main Map with Time Slider Interactive map of Ningbo's districts. A time slider (2010–2025) to visualize changes in air quality over time. Districts shaded by AQI (green = good, red = poor). District Panel (Popup on Click) Line Chart: Trends in air quality (PM2.5 / AQI). Bar Chart: Traffic congestion index. Progress Chart: Green coverage rate. Comparison Mode Users can select two districts for side-by-side comparison (e.g., Haishu vs. Jiangbei). Significance This project will enable the audience to: Visually experience Ningbo’s transformation over 15 years. Understand the cause-and-effect relationship between policy interventions and sustainability improvements. Reflect on quality of life by comparing progress across different districts. Technical Implementation Plan Tools: D3.js / Mapbox for the interactive map. Chart.js or Plotly for district panels. Data Sources: Air Quality (AQI/PM2.5): Ningbo Environmental Monitoring Center. Traffic Data: Ningbo Transportation Bureau. Green Coverage Data: Ningbo Urban Planning Bureau. Presentation Style: Storyline presented through phased text and image slides. Interactive charts embedded to support and illustrate the narrative.
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Singapore PSI Table</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    td {
+      background-color: #fafafa;
+    }
+  </style>
+</head>
+<body>
+  <h2>Singapore PSI table</h2>
+  <h4 id="timestring"></h4>
+  <table id="PSItable"> 
+    <tr>
+      <th>Metric</th>
+      <th>Central</th>
+      <th>West</th>
+      <th>East</th>
+      <th>North</th>
+      <th>Sorth</th>
+      <th>National</th>
+    </tr>
+  </table><script>
+async function fetchPSIData() {
+  try {
+    const response = await fetch('https://api.data.gov.sg/v1/environment/psi');
+    const data = await response.json();
+
+    // 时间
+    const timestamp = data.items[0].update_timestamp || data.items[0].timestamp;
+    document.getElementById("timestring").textContent = `Timestamp: ${timestamp}`;
+
+    const readings = data.items[0].readings;
+
+    // 遍历所有 readings
+    for (const metric in readings) {
+      const row = document.createElement("tr");
+
+      const cellMetric = document.createElement("td");
+      cellMetric.textContent = metric;
+      row.appendChild(cellMetric);
+
+      ["central", "west", "east", "north", "south", "national"].forEach(region => {
+        const cell = document.createElement("td");
+        cell.textContent = readings[metric][region] ?? "-";
+        row.appendChild(cell);
+      });
+
+      document.getElementById("PSItable").appendChild(row);
+    }
+  } catch (error) {
+    console.error("Error fetching PSI data:", error);
+    document.getElementById("timestring").textContent = "Failed to load PSI data.";
+  }
+}
+
+fetchPSIData();
+</script>
+  
+
+</body>
+</html>
+    
